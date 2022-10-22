@@ -17,63 +17,51 @@
 </head>
 
 <body>
-  <header class="jumbotron jumbotron-fluid">
+
+    <!--header-->
+  <header class="jumbotron jumbotron-fluid p-3 mb-2 bg-secondary text-white">
     <div class="container">
-      <h1 class="display-4 text-center">Weather Dashboard</h1>
+      <h1 class="display-4 text-center ">Weather Dashboard</h1>
     </div>
   </header>
 
   <main class="row">
 
-    <section class="col-3">
+    <!--search bar & search history-->
+    <section class="search-container col-2 mx-5">
       <div>
-        <input type="" class="" id="city-input">
+        <input type="" class="" id="city-input" style="width:250px">
       </div>
      
       <div>
-        <button id='search-btn' type="button" class="btn btn-primary" style="width:200px">Search</button>
+        <button id="search-btn" type="button" class="btn btn-primary my-2" style="width:250px">Search</button>
       </div>
 
-      <div>
-
+      <div class="my-2 border-bottom border-dark" style="width:250px"></div>
+      <div id="search-history">
 
       </div>
 
 
      </section>
 
+    <!--weather forecast-->
+    <section class="col-8 mx-5">
 
-    <section class="col-9">
+      <!--current weather-->
       <div class="container-fluid">
-        <div id="currentHeader"></div>
-        <ul id="currentBody"></ul>
+        <div id="current-weather-container"></div>
 
       </div>
 
     
-      
-      <div class="container-fluid d-inline-flex">
-        <div id="1" class="card" style="width: 18rem;"></div>
-        <div id="2" class="card" style="width: 18rem;"></div>
-        <div id="3" class="card" style="width: 18rem;"></div>
-        <div id="4" class="card" style="width: 18rem;"></div>
-        <div id="5" class="card" style="width: 18rem;"></div>
+      <!--5 days weather forecast-->
+      <div id="weather-forecast"class="container-fluid d-inline-flex mx-5">
       </div>
      
-
-
-
-
-
-
-
     </section>
 
-
-
   </main>
-
-
 
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
