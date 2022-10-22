@@ -9,6 +9,8 @@ var userCityInput = document.querySelector('#city-input');
 var currentWeatherContainerEl = document.querySelector('#current-weather-container');
 var weatherForecastContainerEl = document.querySelector('#weather-forecast');
 var searchHistoryEl = document.querySelector('#search-history');
+var historyEl = document.querySelector('.history');
+
 
 var weatherForecast = 
 { 
@@ -86,7 +88,7 @@ function secondQueURL(){
   tempArray = [];
   finalArray = [];
   //build second query URL with imperial unit
-  var secondQueURL = "https://api.openweathermap.org/data/2.5/forecast?lat="+ latitude + "&lon=" + longitude + "&list=5&appid=" + APIKey + "&units=imperial";
+  var secondQueURL = "https://api.openweathermap.org/data/2.5/forecast?lat="+ latitude + "&lon=" + longitude + "&appid=" + APIKey + "&units=imperial";
 
   fetch(secondQueURL)
     .then(function (response){
@@ -94,6 +96,8 @@ function secondQueURL(){
   })
   .then(function(data){
     
+    console.log(data);
+    console.log(data.list.length);
     //for loop to filter the data
     for (var i = 0; i < data.list.length; i= i+8){
     weatherForecast.date = moment.unix(data.list[i].dt).format('L');
@@ -103,6 +107,7 @@ function secondQueURL(){
     weatherForecast.humidity = data.list[i].main.humidity;
     tempArray = Object.values(weatherForecast);
     finalArray = finalArray.concat(tempArray);
+    console.log(i);
     }
     
     //Convert a javaScript object into a string with JSON.stringify() and save to local storage
@@ -200,17 +205,35 @@ function displayWeather(){
 }
 
 function searchHistory(){
-  var searchEl = document.createElement("button");
-  searchEl.innerText = city;
-  searchHistoryEl.appendChild(searchEl);
-  
+
+  var searchEl ="";
+
+  if (localStorage.length>0){
+    for (var i=0; i<localStorage.length; i++){
+      searchEl = document.createElement("button");
+      searchEl.innerText = localStorage.key(i);
+      searchEl.classList = 'history btn btn-secondary flex-row justify-space-between align-center my-2 data-city';
+      searchEl.style = 'width:250px';
+      searchEl.setAttribute("data-city",localStorage.key(i))
+      searchHistoryEl.appendChild(searchEl);
+    }
+  } 
+  else{
+    return;
+  }
+
 }
 
+searchHistory();
 
-
+function getHistoryInput(event){
+  city = event.target.getAttribute('data-city');
+  displayWeather();
+}
 
 //event listener for search button
 document.getElementById("search-btn").addEventListener("click",getCityInput);
+searchHistoryEl.addEventListener("click",getHistoryInput);
 
 
 
