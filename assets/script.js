@@ -1,4 +1,5 @@
 var APIKey = "696848c9db1258d1705e81c72e126567";
+var redirectUrl = './404.html';
 var city = "";
 var latitude;
 var longitude;
@@ -10,7 +11,8 @@ var currentWeatherContainerEl = document.querySelector('#current-weather-contain
 var weatherForecastContainerEl = document.querySelector('#weather-forecast');
 var searchHistoryEl = document.querySelector('#search-history');
 var historyEl = document.querySelector('.history');
-var cityName
+var cityName ="";
+var weatherIndex = 0;
 
 var weatherForecast = 
 { 
@@ -46,31 +48,34 @@ function getCityInput (event){
   userCityInput.value = "";
 }
 
-//clear data before
-function clearData(){
-
-}
-
 //first query function
 function firstQuery(){
 
   //build first query URL with imperial unit
   var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIKey + "&units=imperial";
 
+  //clear string before receiving new data
   tempArray = [];
   finalArray = [];
+  cityName = "";
 
   fetch(queryURL)
-    .then(function (response,){
+    //
+    .then(function (response){
+      if (response.status !== 200) {
+        document.location.replace (redirectUrl)
+      }
       return response.json();
     })
+
     .then(function(data){
-      
+
       //get latitude and longitude for second query
       latitude = data.coord.lat;
       longitude = data.coord.lon;
  
-      //get data from server    
+      //get data from server
+      cityName = data.name; //To have consistent format between lower and upper case, get the city name from server
       weatherForecast.date = moment.unix(data.dt).format('L');
       weatherForecast.icon = data.weather[0].icon;
       weatherForecast.temperature = data.main.temp;
@@ -88,8 +93,7 @@ function firstQuery(){
 }
 
 function secondQueURL(){
-  tempArray = [];
-  finalArray = [];
+
   //build second query URL with imperial unit
   var secondQueURL = "https://api.openweathermap.org/data/2.5/forecast?lat="+ latitude + "&lon=" + longitude + "&appid=" + APIKey + "&units=imperial";
 
@@ -102,28 +106,25 @@ function secondQueURL(){
     console.log(data);
     console.log(data.list.length);
     //for loop to filter the data
-    for (var i = 0; i < data.list.length; i= i+8){
-    weatherForecast.date = moment.unix(data.list[i].dt).format('L');
-    weatherForecast.icon = data.list[i].weather[0].icon;
-    weatherForecast.temperature = data.list[i].main.temp;
-    weatherForecast.wind = data.list[i].wind.speed;
-    weatherForecast.humidity = data.list[i].main.humidity;
+    for (var i = 0; i<5; i++){  
+    weatherIndex = i*8 + 4;  
+    weatherForecast.date = moment.unix(data.list[weatherIndex].dt).format('L');
+    weatherForecast.icon = data.list[weatherIndex].weather[0].icon;
+    weatherForecast.temperature = data.list[weatherIndex].main.temp;
+    weatherForecast.wind = data.list[weatherIndex].wind.speed;
+    weatherForecast.humidity = data.list[weatherIndex].main.humidity;
+
     tempArray = Object.values(weatherForecast);
     finalArray = finalArray.concat(tempArray);
-    console.log(i);
     }
     
     //Convert a javaScript object into a string with JSON.stringify() and save to local storage
-    localStorage.setItem(city, JSON.stringify(finalArray));
-
+    localStorage.setItem(cityName, JSON.stringify(finalArray));
   })
 
 
   //short delay to endure data is ready to process
   setTimeout(displayWeather, 500)
-  //displayWeather();
-
-
 }
 
 
@@ -133,10 +134,11 @@ function displayWeather(){
   weatherForecastContainerEl.innerHTML ="";
   
   //get data from local storage
-  displayArray = JSON.parse(localStorage.getItem(city));
+  displayArray = JSON.parse(localStorage.getItem(cityName));
+  console.log(displayArray.length);
 
   for (var i = 0; i < displayArray.length; i= i+5){
-    //weatherForecast.city = data.city.name;
+
     displayWeatherForecast.date = displayArray[i]
     displayWeatherForecast.icon = displayArray[i+1]
     displayWeatherForecast.temperature = displayArray[i+2]
@@ -145,8 +147,13 @@ function displayWeather(){
       
     //build current weather
     if (i<5){
+
       var headerEl = document.createElement("h2");
-      headerEl.innerText = city + " " + displayWeatherForecast.date + " " + displayWeatherForecast.icon;
+      headerEl.innerText = cityName + " " + displayWeatherForecast.date;
+
+      var iconEl = document.createElement("img");
+      iconEl.src = "http://openweathermap.org/img/wn/" + displayWeatherForecast.icon +"@2x.png";
+      headerEl.appendChild(iconEl);    
 
       var listEl = document.createElement('div');
       listEl.classList = 'flex-row justify-space-between align-center';
@@ -175,7 +182,11 @@ function displayWeather(){
     //build 5 days weather forecast
     else {
       var headerEl = document.createElement("h3");
-      headerEl.innerText = displayWeatherForecast.date + displayWeatherForecast.icon;
+      headerEl.innerText = displayWeatherForecast.date;
+
+      var iconEl = document.createElement("img");
+      iconEl.src = "http://openweathermap.org/img/wn/" + displayWeatherForecast.icon +"@2x.png";
+      headerEl.appendChild(iconEl);    
 
       var listEl = document.createElement('div');
       listEl.classList = 'list-item flex-row justify-space-between align-center';
@@ -230,12 +241,24 @@ function searchHistory(){
 
 
 function getHistoryInput(event){
-  city = event.target.getAttribute('data-city');
+  cityName = event.target.getAttribute('data-city');
   displayWeather();
 }
 
+function clearHistory(){
+  var historyCount = localStorage.length
+  for (var i=0;i<=historyCount;i++){
+    var keyName = localStorage.key(0);
+    localStorage.removeItem(keyName);  
+  }
+  searchHistory();
+  displayWeather();
+  }
+
+
 //event listener for search button
 document.getElementById("search-btn").addEventListener("click",getCityInput);
+document.getElementById("clear-btn").addEventListener("click",clearHistory);
 searchHistoryEl.addEventListener("click",getHistoryInput);
 
 
