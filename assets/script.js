@@ -10,7 +10,7 @@ var currentWeatherContainerEl = document.querySelector('#current-weather-contain
 var weatherForecastContainerEl = document.querySelector('#weather-forecast');
 var searchHistoryEl = document.querySelector('#search-history');
 var historyEl = document.querySelector('.history');
-
+var cityName
 
 var weatherForecast = 
 { 
@@ -29,6 +29,9 @@ var displayWeatherForecast =
   wind: "",
   humidity: "",
 } 
+
+
+searchHistory();
 
 //get user input for city name
 function getCityInput (event){
@@ -115,7 +118,7 @@ function secondQueURL(){
 
   })
 
-  searchHistory();
+
   //short delay to endure data is ready to process
   setTimeout(displayWeather, 500)
   //displayWeather();
@@ -146,7 +149,7 @@ function displayWeather(){
       headerEl.innerText = city + " " + displayWeatherForecast.date + " " + displayWeatherForecast.icon;
 
       var listEl = document.createElement('div');
-      listEl.classList = 'list-item flex-row justify-space-between align-center';
+      listEl.classList = 'flex-row justify-space-between align-center';
   
       //build temperature
       var temperatureEl = document.createElement('li');
@@ -200,18 +203,18 @@ function displayWeather(){
        
   }
 
-
+  searchHistory();
 
 }
 
 function searchHistory(){
 
-  var searchEl ="";
+  searchHistoryEl.innerHTML ="";
 
   if (localStorage.length>0){
     for (var i=0; i<localStorage.length; i++){
       searchEl = document.createElement("button");
-      searchEl.innerText = localStorage.key(i);
+      searchEl.textContent = localStorage.key(i);
       searchEl.classList = 'history btn btn-secondary flex-row justify-space-between align-center my-2 data-city';
       searchEl.style = 'width:250px';
       searchEl.setAttribute("data-city",localStorage.key(i))
@@ -224,7 +227,7 @@ function searchHistory(){
 
 }
 
-searchHistory();
+
 
 function getHistoryInput(event){
   city = event.target.getAttribute('data-city');
