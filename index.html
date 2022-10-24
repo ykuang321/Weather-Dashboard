@@ -5,7 +5,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+  <link
+  rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
 
   <link
   rel="stylesheet"
@@ -13,6 +16,7 @@
   integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
   crossorigin="anonymous"
   />
+  <link rel="stylesheet" href="./assets/style.css">
   <title>Weather Dashboard</title>
 </head>
 
@@ -21,16 +25,17 @@
     <!--header-->
   <header class="jumbotron jumbotron-fluid p-3 mb-2 bg-secondary text-white">
     <div class="container">
-      <h1 class="display-4 text-center ">Weather Dashboard</h1>
+      <h1 class="display-4 text-center">Weather Dashboard</h1>
     </div>
   </header>
 
   <main class="row">
 
-    <!--search bar & search history-->
+    <!-- search bar & search history section -->
     <section class="search-container col-2 mx-5">
+      <h5>Search City Here:</h5>
       <div>
-        <input type="" class="" id="city-input" style="width:250px">
+        <input id="city-input" style="width:250px">
       </div>
      
       <div>
@@ -42,25 +47,17 @@
       </div>
 
       <div class="my-2 border-bottom border-dark" style="width:250px"></div>
-      <div id="search-history">
-
-      </div>
-
-
+      <div id="search-history"></div>
      </section>
 
-    <!--weather forecast-->
-    <section class="col-8 mx-5">
+    <!-- weather forecast section -->
+    <section class="col-8 mx-3">
 
       <!--current weather-->
-      <div class="container-fluid">
-        <div id="current-weather-container"></div>
-      </div>
-
+      <div id="current-weather-container"></div>
 
       <!--5 days weather forecast-->
-      <div id="weather-forecast"class="container-fluid d-inline-flex mx-5">
-      </div>
+      <div id="weather-forecast"class="d-flex justify-content-between my-3"></div>
      
     </section>
 

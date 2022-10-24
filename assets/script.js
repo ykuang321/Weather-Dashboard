@@ -5,7 +5,7 @@ var latitude;
 var longitude;
 var tempArray = [];
 var finalArray = [];
-var displayArray =[];
+var displayArray = [];
 var userCityInput = document.querySelector('#city-input');
 var currentWeatherContainerEl = document.querySelector('#current-weather-container');
 var weatherForecastContainerEl = document.querySelector('#weather-forecast');
@@ -33,7 +33,7 @@ var displayWeatherForecast =
 } 
 
 
-searchHistory();
+
 
 //get user input for city name
 function getCityInput (event){
@@ -103,8 +103,6 @@ function secondQueURL(){
   })
   .then(function(data){
     
-    console.log(data);
-    console.log(data.list.length);
     //for loop to filter the data
     for (var i = 0; i<5; i++){  
     weatherIndex = i*8 + 4;  
@@ -122,11 +120,8 @@ function secondQueURL(){
     localStorage.setItem(cityName, JSON.stringify(finalArray));
   })
 
-
-  //short delay to endure data is ready to process
-  setTimeout(displayWeather, 500)
+    displayWeather();
 }
-
 
 function displayWeather(){
 
@@ -135,6 +130,7 @@ function displayWeather(){
   
   //get data from local storage
   displayArray = JSON.parse(localStorage.getItem(cityName));
+
   console.log(displayArray.length);
 
   for (var i = 0; i < displayArray.length; i= i+5){
@@ -147,75 +143,86 @@ function displayWeather(){
       
     //build current weather
     if (i<5){
-
+      //build header
       var headerEl = document.createElement("h2");
-      headerEl.innerText = cityName + " " + displayWeatherForecast.date;
+      headerEl.innerText = cityName + " " + displayWeatherForecast.date + " ";
+      headerEl.classList = "mx-2";
+      currentWeatherContainerEl.appendChild(headerEl);  
 
+      //build icon
       var iconEl = document.createElement("img");
       iconEl.src = "http://openweathermap.org/img/wn/" + displayWeatherForecast.icon +"@2x.png";
-      headerEl.appendChild(iconEl);    
+      iconEl.style = "width:60px";
+      currentWeatherContainerEl.appendChild(iconEl);    
 
-      var listEl = document.createElement('div');
-      listEl.classList = 'flex-row justify-space-between align-center';
-  
       //build temperature
-      var temperatureEl = document.createElement('li');
-      temperatureEl.classList = 'flex-row align-center';
-      temperatureEl.innerHTML = displayWeatherForecast.temperature + " \xBAF"
-      listEl.appendChild(temperatureEl);
+      var temperatureEl = document.createElement('p');
+      //temperatureEl.classList ="flex-row align-center";
+      temperatureEl.innerHTML ="Temp: " + displayWeatherForecast.temperature + " \xBAF"
+      temperatureEl.classList = "mx-2";
+      currentWeatherContainerEl.appendChild(temperatureEl);
   
       //build wind
-      var windEl = document.createElement("li");
-      windEl.classList = 'flex-row align-center';
-      windEl.innerHTML  = displayWeatherForecast.wind + " MPH"
-      listEl.appendChild(windEl);
+      var windEl = document.createElement("p");
+      //windEl.classList = "flex-row align-center";
+      windEl.innerHTML  = "Wind: " + displayWeatherForecast.wind + " MPH"
+      windEl.classList = "mx-2";
+      currentWeatherContainerEl.appendChild(windEl);
   
       //build humidity
-      var humidityEl= document.createElement("li");
-      humidityEl.innerHTML  = displayWeatherForecast.humidity + " %"
-      listEl.appendChild(humidityEl);
-        
-      headerEl.appendChild(listEl);
-      currentWeatherContainerEl.appendChild(headerEl);
+      var humidityEl= document.createElement("p");
+      humidityEl.innerHTML ="Humidity: " + displayWeatherForecast.humidity + " %"
+      humidityEl.classList = "mx-2";
+      currentWeatherContainerEl.appendChild(humidityEl);
+      currentWeatherContainerEl.classList = "border border-dark bg-white text-dark";
+      //currentWeatherContainerEl.style = "width:100%";
     }
     
     //build 5 days weather forecast
     else {
+
+      var eachDayEl = document.createElement("div");
+      eachDayEl.classList = "border border-dark bg-dark text-white"
+      eachDayEl.style ="width:15%";
+
       var headerEl = document.createElement("h3");
       headerEl.innerText = displayWeatherForecast.date;
-
-      var iconEl = document.createElement("img");
-      iconEl.src = "http://openweathermap.org/img/wn/" + displayWeatherForecast.icon +"@2x.png";
-      headerEl.appendChild(iconEl);    
+      headerEl.classList = 'mx-2';
+      eachDayEl.appendChild(headerEl)
 
       var listEl = document.createElement('div');
-      listEl.classList = 'list-item flex-row justify-space-between align-center';
+      listEl.classList = 'mx-2';
   
+      //build icon
+      var iconEl = document.createElement("img");
+      iconEl.src = "http://openweathermap.org/img/wn/" + displayWeatherForecast.icon +"@2x.png";
+      iconEl.style = "width:50px";
+      listEl.appendChild(iconEl);
+
       //build temperature
-      var temperatureEl = document.createElement('li');
+      var temperatureEl = document.createElement('p');
       temperatureEl.classList = 'flex-row align-center';
-      temperatureEl.innerHTML = displayWeatherForecast.temperature + " \xBAF"
+      temperatureEl.innerHTML = "Temp: " +  displayWeatherForecast.temperature + " \xBAF"
       listEl.appendChild(temperatureEl);
   
       //build wind
-      var windEl = document.createElement("li");
+      var windEl = document.createElement("p");
       windEl.classList = 'flex-row align-center';
-      windEl.innerHTML  = displayWeatherForecast.wind + " MPH"
+      windEl.innerHTML  = "Wind: " + displayWeatherForecast.wind + " MPH"
       listEl.appendChild(windEl);
   
       //build humidity
-      var humidityEl= document.createElement("li");
-      humidityEl.innerHTML  = displayWeatherForecast.humidity + " %"
+      var humidityEl= document.createElement("p");
+      humidityEl.innerHTML = "Humidity: " + displayWeatherForecast.humidity + " %"
       listEl.appendChild(humidityEl);
         
-      headerEl.appendChild(listEl);
-      weatherForecastContainerEl.appendChild(headerEl);
+      eachDayEl.appendChild(listEl);
+      weatherForecastContainerEl.appendChild(eachDayEl);
+      
     }
-       
   }
 
   searchHistory();
-
 }
 
 function searchHistory(){
@@ -235,10 +242,7 @@ function searchHistory(){
   else{
     return;
   }
-
 }
-
-
 
 function getHistoryInput(event){
   cityName = event.target.getAttribute('data-city');
@@ -256,11 +260,9 @@ function clearHistory(){
   }
 
 
+searchHistory();
+
 //event listener for search button
 document.getElementById("search-btn").addEventListener("click",getCityInput);
 document.getElementById("clear-btn").addEventListener("click",clearHistory);
 searchHistoryEl.addEventListener("click",getHistoryInput);
-
-
-
-
