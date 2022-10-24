@@ -32,9 +32,6 @@ var displayWeatherForecast =
   humidity: "",
 } 
 
-
-
-
 //get user input for city name
 function getCityInput (event){
   event.preventDefault();
@@ -46,6 +43,11 @@ function getCityInput (event){
 
   //clear data
   userCityInput.value = "";
+}
+
+function getHistoryInput(event){
+  cityName = event.target.getAttribute('data-city');
+  displayWeather();
 }
 
 //first query function
@@ -92,6 +94,7 @@ function firstQuery(){
     })   
 }
 
+//second query function
 function secondQueURL(){
 
   //build second query URL with imperial unit
@@ -123,6 +126,7 @@ function secondQueURL(){
     displayWeather();
 }
 
+//display current weather and 5-days weather forecast
 function displayWeather(){
 
   currentWeatherContainerEl.innerHTML ="";
@@ -225,8 +229,10 @@ function displayWeather(){
   searchHistory();
 }
 
+//build search history
 function searchHistory(){
 
+  //clear data
   searchHistoryEl.innerHTML ="";
 
   if (localStorage.length>0){
@@ -244,12 +250,9 @@ function searchHistory(){
   }
 }
 
-function getHistoryInput(event){
-  cityName = event.target.getAttribute('data-city');
-  displayWeather();
-}
-
+//clear search history
 function clearHistory(){
+
   var historyCount = localStorage.length
   for (var i=0;i<=historyCount;i++){
     var keyName = localStorage.key(0);
@@ -259,7 +262,7 @@ function clearHistory(){
   displayWeather();
   }
 
-
+//call search history function when page load  
 searchHistory();
 
 //event listener for search button
