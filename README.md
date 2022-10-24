@@ -20,6 +20,10 @@ At this page:
 1. Promote the user to check the spelling and try again.
 
 
+### *Additional Feature*
+The user can use *Clear History* button to clear the search history.
+
+
 ## User Story
 
 ```
@@ -45,12 +49,12 @@ This application should include:
 The following image shows the web application's appearance:
 
 *Start Page:*
-![Start Page.](./assets/image/Start_Page.png)
+![Start Page.](./assets/images/Start_Page.png)
 
 *Start Page with Results:*
-![Start Page with Results.](./assets/image/Quiz_Page.png)
+![Start Page with Results.](./assets/images/Result_Page.png)
 
 *404 Page:*
-![404 Page.](./assets/image/End_Page.png)
+![404 Page.](./assets/images/404_Page.png)
 
 ## URL

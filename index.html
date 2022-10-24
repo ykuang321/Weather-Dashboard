@@ -33,11 +33,13 @@
 
     <!-- search bar & search history section -->
     <section class="search-container col-2 mx-5">
-      <h5>Search City Here:</h5>
       <div>
+        <form id="city-input-form" method="POST">
+        <label style="font-size: larger;font-weight: bolder;" for="city-input">Search City Here:</label>
         <input id="city-input" style="width:250px">
+        </form>
       </div>
-     
+
       <div>
         <button id="search-btn" type="button" class="btn btn-primary my-2" style="width:250px">Search</button>
       </div>
