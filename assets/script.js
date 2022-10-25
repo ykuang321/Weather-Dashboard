@@ -49,7 +49,7 @@ function getCityInput (event){
 function firstQuery(){
 
   //build first query URL with imperial unit
-  var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIKey + "&units=imperial";
+  var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIKey + "&units=imperial";
 
   //clear data before receiving new data
   tempArray = [];
