@@ -9,6 +9,7 @@ var displayArray = [];
 var userCityInputForm = document.querySelector("#city-input-form")
 var userCityInput = document.querySelector("#city-input");
 var currentWeatherContainerEl = document.querySelector('#current-weather-container');
+var weatherForecastHeaderEl = document.querySelector('#weather-forecast-header');
 var weatherForecastContainerEl = document.querySelector('#weather-forecast');
 var searchHistoryEl = document.querySelector('#search-history');
 var historyEl = document.querySelector('.history');
@@ -32,9 +33,6 @@ var displayWeatherForecast =
   wind: "",
   humidity: "",
 } 
-
-//call search history function when page load  
-searchHistory();
 
 //build search history
 function searchHistory(){
@@ -63,17 +61,9 @@ function getCityInput (event){
 
   city = userCityInput.value.trim();  
   
-  //clearData();
   firstQuery();
 
-  //clear data
   userCityInput.value = "";
-}
-
-function getHistoryInput(event){
-  cityName = event.target.getAttribute('data-city');
-  displayWeather();
-
 }
 
 //first query function
@@ -82,13 +72,13 @@ function firstQuery(){
   //build first query URL with imperial unit
   var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIKey + "&units=imperial";
 
-  //clear string before receiving new data
+  //clear data before receiving new data
   tempArray = [];
   finalArray = [];
   cityName = "";
 
   fetch(queryURL)
-    //
+    //display 404 page if input city not found
     .then(function (response){
       if (response.status !== 200) {
         document.location.replace (redirectUrl)
@@ -97,26 +87,24 @@ function firstQuery(){
     })
 
     .then(function(data){
-
       //get latitude and longitude for second query
       latitude = data.coord.lat;
       longitude = data.coord.lon;
  
       //get data from server
-      cityName = data.name; //To have consistent format between lower and upper case, get the city name from server
+      cityName = data.name; //To have consistent format between lower and upper case, use the city name from server
       weatherForecast.date = moment.unix(data.dt).format('L');
       weatherForecast.icon = data.weather[0].icon;
       weatherForecast.temperature = data.main.temp;
       weatherForecast.wind = data.wind.speed;
       weatherForecast.humidity = data.main.humidity;
 
-      //Convert a javaScript object into a string with JSON.stringify() and save to local storage
+      //create a string to local storage
       tempArray = Object.values(weatherForecast);
       finalArray = finalArray.concat(tempArray);
 
       //second query for weather forecast
       secondQueURL();
-
     })   
 }
 
@@ -130,8 +118,7 @@ function secondQueURL(){
     .then(function (response){
       return response.json();
   })
-  .then(function(data){
-    
+    .then(function(data){    
     //for loop to filter the data
     for (var i = 0; i<5; i++){  
     weatherIndex = i*8 + 4;  
@@ -145,12 +132,11 @@ function secondQueURL(){
     tempArray = Object.values(weatherForecast);
     finalArray = finalArray.concat(tempArray);
     }
-    
+    console.log(finalArray);
     //Convert a javaScript object into a string with JSON.stringify() and save to local storage
     localStorage.setItem(cityName, JSON.stringify(finalArray));
+    displayWeather();
   })
-
-  setTimeout(displayWeather,1000);
 }
 
 //display current weather and 5-days weather forecast
@@ -160,7 +146,6 @@ function displayWeather(){
   weatherForecastContainerEl.innerHTML ="";
 
   if (localStorage.length>0){
-
   //get data from local storage
   displayArray =[];
   displayArray = JSON.parse(localStorage.getItem(cityName));
@@ -250,8 +235,21 @@ function displayWeather(){
       weatherForecastContainerEl.appendChild(eachDayEl);
     }
   }
+
+  var textEl = document.createElement("h2");
+  textEl.innerText = "5-Day Forecast:";
+  weatherForecastHeaderEl.appendChild(textEl);  
 }
   searchHistory();
+}
+
+//call search history function when page loads  
+searchHistory();
+
+function getHistoryInput(event){
+  cityName = event.target.getAttribute('data-city');
+  displayWeather();
+
 }
 
 //clear search history
@@ -262,9 +260,10 @@ function clearHistory(){
     var keyName = localStorage.key(0);
     localStorage.removeItem(keyName);  
   }
+  currentWeatherContainerEl.remove();
+  weatherForecastContainerEl.remove();
   searchHistory();
 }
-
 
 //event listeners
 document.getElementById("search-btn").addEventListener("click",getCityInput);
