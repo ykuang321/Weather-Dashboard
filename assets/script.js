@@ -151,7 +151,7 @@ function displayWeather(){
 
       //build icon
       var iconEl = document.createElement("img");
-      iconEl.src = "http://openweathermap.org/img/wn/" + displayWeatherForecast.icon +"@2x.png";
+      iconEl.src = "https://openweathermap.org/img/wn/" + displayWeatherForecast.icon +"@2x.png";
       iconEl.style = "width:60px";
       currentWeatherContainerEl.appendChild(iconEl);    
 
@@ -193,7 +193,7 @@ function displayWeather(){
   
       //build icon
       var iconEl = document.createElement("img");
-      iconEl.src = "http://openweathermap.org/img/wn/" + displayWeatherForecast.icon +"@2x.png";
+      iconEl.src = "https://openweathermap.org/img/wn/" + displayWeatherForecast.icon +"@2x.png";
       iconEl.style = "width:50px";
       listEl.appendChild(iconEl);
 
