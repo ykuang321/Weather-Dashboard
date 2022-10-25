@@ -34,27 +34,6 @@ var displayWeatherForecast =
   humidity: "",
 } 
 
-//build search history
-function searchHistory(){
-
-  //clear data
-  searchHistoryEl.innerHTML ="";
-
-  if (localStorage.length>0){
-    for (var i=0; i<localStorage.length; i++){
-      searchEl = document.createElement("button");
-      searchEl.textContent = localStorage.key(i);
-      searchEl.classList = 'history btn btn-secondary flex-row justify-space-between align-center my-2 data-city';
-      searchEl.style = 'width:250px';
-      searchEl.setAttribute("data-city",localStorage.key(i))
-      searchHistoryEl.appendChild(searchEl);
-    }
-  } 
-  else{
-    return;
-  }
-}
-
 //get user input for city name
 function getCityInput (event){
   event.preventDefault();
@@ -132,7 +111,7 @@ function secondQueURL(){
     tempArray = Object.values(weatherForecast);
     finalArray = finalArray.concat(tempArray);
     }
-    console.log(finalArray);
+
     //Convert a javaScript object into a string with JSON.stringify() and save to local storage
     localStorage.setItem(cityName, JSON.stringify(finalArray));
     displayWeather();
@@ -144,11 +123,13 @@ function displayWeather(){
 
   currentWeatherContainerEl.innerHTML ="";
   weatherForecastContainerEl.innerHTML ="";
+  weatherForecastHeaderEl.innerHTML ="";  
 
   if (localStorage.length>0){
+
   //get data from local storage
-  displayArray =[];
-  displayArray = JSON.parse(localStorage.getItem(cityName));
+    displayArray =[];
+    displayArray = JSON.parse(localStorage.getItem(cityName));
 
   //for loop to create elements in html
   for (var i = 0; i < displayArray.length; i= i+5){
@@ -161,6 +142,7 @@ function displayWeather(){
       
     //build current weather
     if (i<5){
+
       //build header
       headerEl = document.createElement("h2");
       headerEl.innerText = cityName + " " + displayWeatherForecast.date + " ";
@@ -189,6 +171,7 @@ function displayWeather(){
       var humidityEl= document.createElement("p");
       humidityEl.innerHTML ="Humidity: " + displayWeatherForecast.humidity + " %"
       humidityEl.classList = "mx-2";
+
       currentWeatherContainerEl.appendChild(humidityEl);
       currentWeatherContainerEl.classList = "border border-dark bg-white text-dark";
     }
@@ -232,14 +215,15 @@ function displayWeather(){
       listEl.appendChild(humidityEl);
         
       eachDayEl.appendChild(listEl);
-      weatherForecastContainerEl.appendChild(eachDayEl);
+      weatherForecastContainerEl.appendChild(eachDayEl); 
     }
   }
-
+  
+  //build 5-days forecast header
   var textEl = document.createElement("h2");
   textEl.innerText = "5-Day Forecast:";
-  weatherForecastHeaderEl.appendChild(textEl);  
-}
+  weatherForecastHeaderEl.appendChild(textEl);
+  }
   searchHistory();
 }
 
@@ -249,10 +233,30 @@ searchHistory();
 function getHistoryInput(event){
   cityName = event.target.getAttribute('data-city');
   displayWeather();
-
 }
 
-//clear search history
+//build search history
+function searchHistory(){
+
+  //clear data
+  searchHistoryEl.innerHTML ="";
+
+  if (localStorage.length>0){
+    for (var i=0; i<localStorage.length; i++){
+      searchEl = document.createElement("button");
+      searchEl.textContent = localStorage.key(i);
+      searchEl.classList = 'history btn btn-secondary flex-row justify-space-between align-center my-2 data-city';
+      searchEl.style = 'width:250px';
+      searchEl.setAttribute("data-city",localStorage.key(i))
+      searchHistoryEl.appendChild(searchEl);
+    }
+  } 
+  else{
+    return;
+  }
+}
+
+//clear search history and local storage
 function clearHistory(){
 
   var historyCount = localStorage.length
@@ -260,9 +264,9 @@ function clearHistory(){
     var keyName = localStorage.key(0);
     localStorage.removeItem(keyName);  
   }
-  currentWeatherContainerEl.remove();
-  weatherForecastContainerEl.remove();
+
   searchHistory();
+  displayWeather();
 }
 
 //event listeners
